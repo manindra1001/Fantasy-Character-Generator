@@ -83,7 +83,27 @@ export function generateRandomCharacter(preferredClass?: CharacterClass | 'Rando
   const dexMod = calculateModifier(baseStats.dex);
 
   const level = 3 + Math.floor(Math.random() * 3); // Level 3-5 adventurer
-  const maxHp = config.hitDie + conMod + (level - 1) * (Math.floor(config.hitDie / 2) + 1 + conMod);
+
+  // Random stats for Health, Mana, and Strength
+  let health = 100;
+  let mana = 75;
+  let strength = baseStats.str;
+
+  if (characterClass === 'Warrior') {
+    health = 120 + Math.floor(Math.random() * 55) + baseStats.con * 2; // ~150-210
+    mana = 30 + Math.floor(Math.random() * 30) + baseStats.int;        // ~40-70
+    strength = Math.max(16, baseStats.str + Math.floor(Math.random() * 3)); // 16-20
+  } else if (characterClass === 'Mage') {
+    health = 65 + Math.floor(Math.random() * 40) + baseStats.con;      // ~75-120
+    mana = 130 + Math.floor(Math.random() * 65) + baseStats.int * 2;   // ~160-230
+    strength = Math.max(8, baseStats.str);                             // 8-13
+  } else if (characterClass === 'Rogue') {
+    health = 90 + Math.floor(Math.random() * 45) + baseStats.con * 2;  // ~110-165
+    mana = 60 + Math.floor(Math.random() * 40) + baseStats.int;        // ~70-115
+    strength = Math.max(12, baseStats.str);                            // 12-16
+  }
+
+  const maxHp = health;
   const ac = characterClass === 'Warrior' ? 18 : characterClass === 'Rogue' ? 14 + dexMod : 11 + dexMod;
   const speed = characterClass === 'Rogue' ? 35 : 30;
   const initiative = dexMod;
@@ -103,9 +123,12 @@ export function generateRandomCharacter(preferredClass?: CharacterClass | 'Rando
     level,
     origin: getRandomItem(config.origins),
     alignment: getRandomItem(ALIGNMENTS),
-    stats: baseStats,
-    hp: Math.max(12, maxHp),
-    maxHp: Math.max(12, maxHp),
+    stats: { ...baseStats, str: strength },
+    health,
+    mana,
+    strength,
+    hp: health,
+    maxHp: health,
     ac,
     speed,
     initiative,

@@ -52,7 +52,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             onClick={onOpenRoster}
             className="hover:text-slate-100 transition-colors whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1.5"
           >
-            <span>Tavern Roster</span>
+            <span>My Deck</span>
             {rosterCount > 0 && (
               <span className="text-xs font-mono text-amber-400 font-semibold">({rosterCount})</span>
             )}

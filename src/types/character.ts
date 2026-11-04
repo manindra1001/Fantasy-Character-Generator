@@ -19,6 +19,9 @@ export interface Character {
   origin: string;
   alignment: string;
   stats: AttributeScores;
+  health: number; // Explicit Health stat
+  mana: number;   // Explicit Mana stat
+  strength: number; // Explicit Strength stat
   hp: number;
   maxHp: number;
   ac: number;

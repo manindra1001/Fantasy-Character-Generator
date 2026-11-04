@@ -39,13 +39,13 @@ export const RosterDrawer: React.FC<RosterDrawerProps> = ({
               <Users className="h-4 w-4" />
             </div>
             <div>
-              <h3 className="font-display text-lg font-bold text-slate-100">Tavern Roster</h3>
-              <p className="text-xs text-slate-400">{roster.length} Adventurers Recruited</p>
+              <h3 className="font-display text-lg font-bold text-slate-100">My Deck</h3>
+              <p className="text-xs text-slate-400">{roster.length} Player Cards in Deck</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            aria-label="Close roster"
+            aria-label="Close deck drawer"
             className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-900 hover:text-white transition-colors cursor-pointer"
           >
             <X className="h-5 w-5" />
@@ -57,9 +57,9 @@ export const RosterDrawer: React.FC<RosterDrawerProps> = ({
           {roster.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-64 text-center px-4">
               <Users className="h-10 w-10 text-slate-700 mb-3" />
-              <p className="text-sm font-semibold text-slate-300">Your tavern is quiet</p>
+              <p className="text-sm font-semibold text-slate-300">Your deck is empty</p>
               <p className="text-xs text-slate-500 mt-1 max-w-xs">
-                Generate characters and click &ldquo;Save to Roster&rdquo; to recruit adventurers into your company.
+                Generate characters and click &ldquo;Save to Deck&rdquo; to add cards to your collection.
               </p>
             </div>
           ) : (
@@ -71,7 +71,7 @@ export const RosterDrawer: React.FC<RosterDrawerProps> = ({
                   key={char.id}
                   className={`group relative flex items-center justify-between gap-3 p-3.5 rounded-xl border transition-all cursor-pointer ${
                     isActive
-                      ? 'border-amber-500/50 bg-amber-950/20 shadow-md'
+                      ? 'border-amber-500/60 bg-amber-950/30 shadow-md ring-1 ring-amber-500/30'
                       : 'border-slate-800 bg-slate-900/60 hover:border-slate-700 hover:bg-slate-900'
                   }`}
                   onClick={() => {
@@ -80,7 +80,7 @@ export const RosterDrawer: React.FC<RosterDrawerProps> = ({
                   }}
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-slate-700 bg-slate-950 text-amber-400 overflow-hidden">
+                    <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-amber-500/30 bg-slate-950 text-amber-400 overflow-hidden shadow-inner">
                       {char.cartoonPortraitUrl || char.portraitUrl ? (
                         <img
                           src={char.activePortraitStyle === 'cartoon' && char.cartoonPortraitUrl ? char.cartoonPortraitUrl : (char.portraitUrl || char.cartoonPortraitUrl)}
@@ -93,15 +93,17 @@ export const RosterDrawer: React.FC<RosterDrawerProps> = ({
                       )}
                     </div>
                     <div className="min-w-0">
-                      <h4 className="text-sm font-semibold text-slate-100 truncate">
+                      <h4 className="text-sm font-semibold text-slate-100 truncate font-fantasy text-amber-200">
                         {char.name}
                       </h4>
-                      <div className="flex items-center gap-2 text-xs text-slate-400">
-                        <span className="font-medium text-amber-400/90">{char.characterClass}</span>
+                      <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono mt-0.5">
+                        <span className="text-amber-400 font-medium">{char.characterClass}</span>
                         <span>·</span>
-                        <span className="font-mono text-slate-400">LVL {char.level}</span>
+                        <span className="text-rose-400">{char.health || char.hp} HP</span>
                         <span>·</span>
-                        <span className="font-mono text-slate-400">{char.hp} HP</span>
+                        <span className="text-sky-400">{char.mana || 50} MP</span>
+                        <span>·</span>
+                        <span className="text-amber-300">{char.strength || char.stats.str} STR</span>
                       </div>
                     </div>
                   </div>
@@ -112,7 +114,7 @@ export const RosterDrawer: React.FC<RosterDrawerProps> = ({
                         e.stopPropagation();
                         onRemoveCharacter(char.id);
                       }}
-                      title="Dismiss from roster"
+                      title="Remove from deck"
                       className="p-1.5 text-slate-500 hover:text-rose-400 transition-colors"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -132,7 +134,7 @@ export const RosterDrawer: React.FC<RosterDrawerProps> = ({
               onClick={onClearRoster}
               className="text-xs text-rose-400/80 hover:text-rose-300 transition-colors cursor-pointer"
             >
-              Clear Entire Roster
+              Clear Entire Deck
             </button>
             <button
               onClick={onClose}

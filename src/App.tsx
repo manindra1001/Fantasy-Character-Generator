@@ -78,8 +78,11 @@ export default function App() {
     setCharacter(prev => ({
       ...prev,
       stats: freshStatsChar.stats,
-      hp: freshStatsChar.hp,
-      maxHp: freshStatsChar.maxHp,
+      health: freshStatsChar.health,
+      mana: freshStatsChar.mana,
+      strength: freshStatsChar.strength,
+      hp: freshStatsChar.health,
+      maxHp: freshStatsChar.health,
       ac: freshStatsChar.ac,
       initiative: freshStatsChar.initiative,
       rarity: freshStatsChar.rarity,
@@ -142,7 +145,7 @@ export default function App() {
     }, 200);
   };
 
-  const handleSaveToRoster = (char: Character) => {
+  const handleSaveToDeck = (char: Character) => {
     soundEffects.playClick();
     setRoster(prev => {
       const exists = prev.some(item => item.id === char.id);
@@ -154,12 +157,12 @@ export default function App() {
     });
   };
 
-  const handleRemoveFromRoster = (id: string) => {
+  const handleRemoveFromDeck = (id: string) => {
     soundEffects.playClick();
     setRoster(prev => prev.filter(c => c.id !== id));
   };
 
-  const handleClearRoster = () => {
+  const handleClearDeck = () => {
     soundEffects.playClick();
     setRoster([]);
   };
@@ -296,23 +299,38 @@ export default function App() {
             </button>
 
             <button
+              onClick={() => handleSaveToDeck(character)}
+              className={`cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all ${
+                isCurrentSaved
+                  ? 'border-emerald-500/50 bg-emerald-950/40 text-emerald-300 hover:bg-emerald-950/60'
+                  : 'border-amber-500/40 bg-amber-950/30 text-amber-300 hover:bg-amber-950/60'
+              }`}
+              title="Save current character to My Deck"
+            >
+              <Users className="h-3.5 w-3.5 text-amber-400" />
+              <span>{isCurrentSaved ? 'Saved to Deck' : 'Save to Deck'}</span>
+            </button>
+
+            <button
               onClick={() => setIsRosterOpen(true)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-800 bg-slate-900 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
             >
               <Users className="h-3.5 w-3.5 text-amber-400" />
-              <span>Roster ({roster.length})</span>
+              <span>My Deck ({roster.length})</span>
             </button>
           </div>
         </div>
 
-        {/* The Detailed Character Card with Ambient Magical Glow */}
+        {/* The Bordered Player Card with Ambient Magical Glow */}
         <div className="relative z-10 transition-all duration-300">
           {/* Subtle Ambient Halo Glow behind Main Content */}
           <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-amber-500/15 via-purple-500/10 to-amber-500/15 blur-xl opacity-75 pointer-events-none" />
           <CharacterCard
             character={character}
             onRerollStats={handleRerollStats}
-            onSaveToRoster={handleSaveToRoster}
+            onSaveToDeck={handleSaveToDeck}
+            isSavedInDeck={isCurrentSaved}
+            onSaveToRoster={handleSaveToDeck}
             isSaved={isCurrentSaved}
             onGenerateCartoonPortrait={handleGenerateCartoonPortrait}
             onRegenerateCartoonPortrait={handleRegenerateCartoonPortrait}
@@ -437,8 +455,8 @@ export default function App() {
         onClose={() => setIsRosterOpen(false)}
         roster={roster}
         onSelectCharacter={(char) => setCharacter(char)}
-        onRemoveCharacter={handleRemoveFromRoster}
-        onClearRoster={handleClearRoster}
+        onRemoveCharacter={handleRemoveFromDeck}
+        onClearRoster={handleClearDeck}
         activeCharacterId={character.id}
       />
 
