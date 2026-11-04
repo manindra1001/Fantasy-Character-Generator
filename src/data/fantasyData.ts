@@ -5,6 +5,7 @@ export const PORTRAITS = {
   Mage: '/src/assets/images/char_mage_portrait_1793792350388.jpg',
   Rogue: '/src/assets/images/char_rogue_portrait_1793792351081.jpg',
   TavernBackdrop: '/src/assets/images/char_tavern_backdrop_1793792351581.jpg',
+  AlchemistWorkbench: '/src/assets/images/alchemist_workbench_dark_1793793718763.jpg',
 };
 
 export const CARTOON_PORTRAITS: Record<CharacterClass, string[]> = {

@@ -2,16 +2,24 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+  --font-fantasy: "MedievalSharp", cursive, serif;
+  --font-display: "Cinzel", serif;
+  --font-decor: "Cinzel Decorative", serif;
+}
+
 @layer base {
   :root {
     --font-cinzel: 'Cinzel', serif;
+    --font-cinzel-decor: 'Cinzel Decorative', serif;
+    --font-fantasy: 'MedievalSharp', cursive, serif;
     --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
   }
 
   body {
     font-family: var(--font-sans);
-    background-color: #0b0f19;
+    background-color: #080b11;
     color: #e2e8f0;
     min-height: 100vh;
     overflow-x: hidden;
@@ -20,6 +28,47 @@
   h1, h2, h3, .font-display {
     font-family: var(--font-cinzel);
   }
+}
+
+.font-fantasy,
+.character-fantasy-title {
+  font-family: 'MedievalSharp', cursive, serif !important;
+  letter-spacing: 0.03em;
+}
+
+.font-decor {
+  font-family: 'Cinzel Decorative', serif !important;
+}
+
+@keyframes borderGlowPulse {
+  0%, 100% {
+    box-shadow: 0 0 22px 2px rgba(245, 158, 11, 0.4), 0 0 50px 6px rgba(168, 85, 247, 0.25), inset 0 0 16px rgba(245, 158, 11, 0.15);
+    border-color: rgba(245, 158, 11, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 38px 6px rgba(245, 158, 11, 0.65), 0 0 80px 12px rgba(168, 85, 247, 0.45), inset 0 0 28px rgba(245, 158, 11, 0.25);
+    border-color: rgba(251, 191, 36, 0.95);
+  }
+}
+
+@keyframes runeShimmer {
+  0%, 100% {
+    opacity: 0.6;
+    text-shadow: 0 0 4px rgba(245, 158, 11, 0.4);
+  }
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 12px rgba(245, 158, 11, 0.9), 0 0 20px rgba(251, 191, 36, 0.7);
+  }
+}
+
+.magical-border-glow {
+  animation: borderGlowPulse 3.5s ease-in-out infinite;
+  border-width: 2px !important;
+}
+
+.rune-glow {
+  animation: runeShimmer 2.8s ease-in-out infinite;
 }
 
 /* Custom scrollbar for hero roster list */

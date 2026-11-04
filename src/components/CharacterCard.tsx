@@ -27,6 +27,8 @@ interface CharacterCardProps {
   onRegenerateCartoonPortrait: () => void;
   onTogglePortraitStyle?: () => void;
   isPortraitGenerating?: boolean;
+  onGenerateBackstory: () => void;
+  isBackstoryGenerating?: boolean;
 }
 
 const CLASS_THEMES: Record<CharacterClass, {
@@ -72,6 +74,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   onRegenerateCartoonPortrait,
   onTogglePortraitStyle,
   isPortraitGenerating = false,
+  onGenerateBackstory,
+  isBackstoryGenerating = false,
 }) => {
   const [copied, setCopied] = useState(false);
   const [imgError, setImgError] = useState(false);
@@ -130,7 +134,13 @@ Backstory: ${character.backstory}
   ];
 
   return (
-    <article className="relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/90 shadow-2xl backdrop-blur-sm transition-all duration-300">
+    <article className="relative overflow-hidden rounded-2xl border border-amber-500/40 bg-slate-950/92 shadow-2xl backdrop-blur-md transition-all duration-300 magical-border-glow">
+      {/* Alchemical Runic Corner Inscriptions */}
+      <div className="absolute top-2.5 left-2.5 text-xs font-mono text-amber-500/40 select-none pointer-events-none" aria-hidden="true">ᛟ</div>
+      <div className="absolute top-2.5 right-2.5 text-xs font-mono text-amber-500/40 select-none pointer-events-none" aria-hidden="true">ᚦ</div>
+      <div className="absolute bottom-2.5 left-2.5 text-xs font-mono text-amber-500/40 select-none pointer-events-none" aria-hidden="true">ᚱ</div>
+      <div className="absolute bottom-2.5 right-2.5 text-xs font-mono text-amber-500/40 select-none pointer-events-none" aria-hidden="true">ᛉ</div>
+
       {/* Subtle top class glow */}
       <div className={`absolute top-0 inset-x-0 h-48 bg-gradient-to-b ${theme.glow} pointer-events-none opacity-40`} />
 
@@ -288,11 +298,14 @@ Backstory: ${character.backstory}
               {/* Character Name & Class Badge */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-800">
                 <div>
-                  <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-slate-100">
+                  <h2
+                    className="character-fantasy-title font-fantasy text-3xl sm:text-4xl md:text-[2.75rem] font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-100 to-amber-400 drop-shadow-[0_2px_12px_rgba(245,158,11,0.35)] leading-tight"
+                    style={{ fontFamily: "'MedievalSharp', cursive, serif" }}
+                  >
                     {character.name}
                   </h2>
-                  <p className="text-sm text-slate-400 mt-0.5">
-                    {character.title}
+                  <p className="text-sm text-slate-300 mt-1 font-medium flex items-center gap-2">
+                    <span>{character.title}</span>
                   </p>
                 </div>
 
@@ -412,18 +425,45 @@ Backstory: ${character.backstory}
                 </div>
               </div>
 
-              {/* Lore & Personality */}
-              <div className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/30 p-4">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                  <ScrollText className="h-3.5 w-3.5 text-amber-400/80" />
-                  <span>Lore & Demeanor</span>
+              {/* Lore & Origin Story */}
+              <div className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/40 p-4.5 shadow-inner">
+                <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                    <ScrollText className="h-3.5 w-3.5 text-amber-400" />
+                    <span>Origin Story &amp; Demeanor</span>
+                  </div>
+                  {/* The required Generate Backstory Button */}
+                  <button
+                    onClick={onGenerateBackstory}
+                    disabled={isBackstoryGenerating}
+                    className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-500 hover:bg-amber-400 text-slate-950 transition-all active:scale-95 disabled:opacity-50 shadow-sm"
+                    title="Generate a unique 1-2 sentence origin story for this character"
+                  >
+                    <Sparkles className="h-3.5 w-3.5" />
+                    <span>{isBackstoryGenerating ? 'Writing Story...' : 'Generate Backstory'}</span>
+                  </button>
                 </div>
-                <p className="text-xs text-slate-300 italic mb-2">
+
+                <p className="text-xs text-slate-300 italic mb-2.5 pl-2 border-l-2 border-amber-500/40">
                   &ldquo;{character.personalityTrait}&rdquo;
                 </p>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  {character.backstory}
-                </p>
+
+                <div className="relative">
+                  <p
+                    className={`text-xs sm:text-sm text-slate-200 leading-relaxed font-sans transition-all duration-300 ${
+                      isBackstoryGenerating ? 'opacity-30 blur-xs scale-[0.99]' : 'opacity-100 scale-100'
+                    }`}
+                  >
+                    {character.backstory}
+                  </p>
+                  {isBackstoryGenerating && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-xs font-mono text-amber-300 font-semibold animate-pulse bg-slate-950/80 px-3 py-1 rounded-md border border-amber-500/40">
+                        Inscribing chronicle...
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

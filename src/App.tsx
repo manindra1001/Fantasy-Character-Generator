@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Dices, Users, BookOpen, Scroll, Shield, Wand2, Footprints, Gamepad2 } from 'lucide-react';
+import { Sparkles, Dices, Users, BookOpen, Scroll, Shield, Wand2, Footprints, Gamepad2, Feather } from 'lucide-react';
 import { TopBar } from './components/TopBar';
 import { CharacterCard } from './components/CharacterCard';
 import { GeneratorControls } from './components/GeneratorControls';
 import { RosterDrawer } from './components/RosterDrawer';
 import { ClassCodexModal } from './components/ClassCodexModal';
+import { MagicalParticles } from './components/MagicalParticles';
 import { Character, CharacterClass } from './types/character';
 import { generateRandomCharacter, getNextCartoonPortrait } from './utils/characterGenerator';
+import { generateUniqueBackstory } from './utils/backstoryGenerator';
 import { soundEffects } from './utils/audioSynth';
 import { PORTRAITS, CARTOON_PORTRAITS } from './data/fantasyData';
 
@@ -19,6 +21,7 @@ export default function App() {
   const [selectedClass, setSelectedClass] = useState<CharacterClass | 'Random'>('Random');
   const [isRolling, setIsRolling] = useState(false);
   const [isPortraitGenerating, setIsPortraitGenerating] = useState(false);
+  const [isBackstoryGenerating, setIsBackstoryGenerating] = useState(false);
   const [isMuted, setIsMuted] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem(LOCAL_STORAGE_MUTE_KEY) === 'true';
@@ -124,6 +127,21 @@ export default function App() {
     }));
   };
 
+  const handleGenerateBackstory = () => {
+    if (!character) return;
+    setIsBackstoryGenerating(true);
+    soundEffects.playStoryChime();
+
+    setTimeout(() => {
+      const newOriginStory = generateUniqueBackstory(character);
+      setCharacter(prev => ({
+        ...prev,
+        backstory: newOriginStory,
+      }));
+      setIsBackstoryGenerating(false);
+    }, 200);
+  };
+
   const handleSaveToRoster = (char: Character) => {
     soundEffects.playClick();
     setRoster(prev => {
@@ -149,7 +167,19 @@ export default function App() {
   const isCurrentSaved = roster.some(c => c.id === character.id);
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-slate-100 flex flex-col selection:bg-amber-500 selection:text-slate-950">
+    <div className="relative min-h-screen bg-[#080b11] text-slate-100 flex flex-col selection:bg-amber-500 selection:text-slate-950 overflow-x-hidden">
+      {/* Ancient Alchemist's Workbench Dark Textured Background Layer */}
+      <div
+        className="fixed inset-0 pointer-events-none z-0 bg-cover bg-center bg-no-repeat opacity-60 transition-opacity duration-700"
+        style={{
+          backgroundImage: `url(${PORTRAITS.AlchemistWorkbench})`,
+        }}
+      />
+      {/* Dark Ambient Vignette and Gradients for Razor-Sharp Readability */}
+      <div className="fixed inset-0 pointer-events-none z-0 bg-radial-[circle_at_center,_var(--tw-gradient-stops)] from-transparent via-[#080b11]/50 to-[#080b11]/92" />
+      <div className="fixed inset-0 pointer-events-none z-0 bg-[#080b11]/35 backdrop-blur-[0.5px]" />
+      <div className="fixed inset-0 pointer-events-none z-0 shadow-[inset_0_0_150px_rgba(0,0,0,0.95)]" />
+
       {/* Top Bar Contract (Wordmark — 4 nav links — 1 action) */}
       <TopBar
         isMuted={isMuted}
@@ -160,35 +190,35 @@ export default function App() {
         rosterCount={roster.length}
       />
 
-      {/* Atmospheric Hero Header with Tavern Backdrop */}
-      <div className="relative border-b border-slate-800/80 bg-slate-950 overflow-hidden">
-        {/* Background Image Scrim */}
-        <div className="absolute inset-0 pointer-events-none opacity-25">
+      {/* Atmospheric Hero Header with Alchemical Sigils */}
+      <div className="relative border-b border-slate-800/80 bg-slate-950/70 overflow-hidden z-10 backdrop-blur-xs">
+        {/* Subtle Hearth Flame Ambient Scrim */}
+        <div className="absolute inset-0 pointer-events-none opacity-20">
           <img
             src={PORTRAITS.TavernBackdrop}
-            alt="Atmospheric fantasy tavern"
+            alt="Atmospheric fantasy tavern hearth"
             className="w-full h-full object-cover object-center"
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f19] via-[#0b0f19]/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#080b11] via-[#080b11]/80 to-transparent" />
         </div>
 
-        <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-amber-400 mb-3">
+        <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-amber-400 mb-2 border border-amber-500/20 rounded-full bg-amber-950/20">
             <Sparkles className="h-3.5 w-3.5" />
-            <span>Interactive Fantasy Hero Forge</span>
+            <span>Alchemical Hero Forge</span>
           </div>
 
-          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white text-balance max-w-3xl mx-auto">
+          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white text-balance max-w-3xl mx-auto drop-shadow-md">
             Summon Legends of the Realm
           </h1>
 
-          <p className="mt-3 text-sm sm:text-base text-slate-300 text-balance max-w-2xl mx-auto leading-relaxed">
-            Generate unique fantasy characters with randomized names, classes, attributes, combat gear, and lore snippets.
+          <p className="mt-2.5 text-xs sm:text-sm text-slate-300 text-balance max-w-2xl mx-auto leading-relaxed">
+            Crafted atop the ancient alchemist&rsquo;s workbench. Forge random fantasy adventurers with authentic RPG stats, class techniques, and custom video game portraits.
           </p>
 
           {/* Interactive Generator Controls */}
-          <section id="generator" className="mt-6">
+          <section id="generator" className="mt-5">
             <GeneratorControls
               selectedClass={selectedClass}
               onSelectClass={(c) => {
@@ -202,20 +232,23 @@ export default function App() {
         </div>
       </div>
 
-      {/* Main Content Area: Character Sheet Viewport */}
-      <main className="flex-1 mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      {/* Main Content Area: Character Sheet Viewport with Magical Particles */}
+      <main className="relative flex-1 mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8 z-10">
+        {/* Subtle Magical Floating Particle Effect */}
+        <MagicalParticles />
+
         {/* Quick Notification of Generated Character */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800/80">
+        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800/80 bg-slate-950/40 p-3.5 rounded-xl backdrop-blur-xs">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/30">
               <Scroll className="h-5 w-5" />
             </div>
             <div>
-              <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
                 Active Adventurer Sheet
               </div>
               <div className="text-sm font-medium text-slate-200">
-                {character.name} &mdash; <span className="text-amber-400 font-bold">{character.characterClass}</span>
+                <span className="character-fantasy-title font-fantasy text-amber-300 text-base" style={{ fontFamily: "'MedievalSharp', cursive, serif" }}>{character.name}</span> &mdash; <span className="text-amber-400 font-bold uppercase tracking-wider text-xs">{character.characterClass}</span>
               </div>
             </div>
           </div>
@@ -243,6 +276,17 @@ export default function App() {
               </button>
             </div>
 
+            {/* Quick Generate Backstory Button */}
+            <button
+              onClick={handleGenerateBackstory}
+              disabled={isBackstoryGenerating}
+              className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-amber-500/40 bg-amber-950/30 text-xs font-semibold text-amber-300 hover:bg-amber-950/60 transition-colors disabled:opacity-50"
+              title="Create a unique 1-2 sentence origin story for this character"
+            >
+              <Feather className="h-3.5 w-3.5 text-amber-400" />
+              <span>{isBackstoryGenerating ? 'Writing...' : 'Generate Backstory'}</span>
+            </button>
+
             <button
               onClick={() => setIsCodexOpen(true)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-800 bg-slate-900 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
@@ -261,8 +305,10 @@ export default function App() {
           </div>
         </div>
 
-        {/* The Detailed Character Card */}
-        <div className="transition-all duration-300">
+        {/* The Detailed Character Card with Ambient Magical Glow */}
+        <div className="relative z-10 transition-all duration-300">
+          {/* Subtle Ambient Halo Glow behind Main Content */}
+          <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-amber-500/15 via-purple-500/10 to-amber-500/15 blur-xl opacity-75 pointer-events-none" />
           <CharacterCard
             character={character}
             onRerollStats={handleRerollStats}
@@ -272,6 +318,8 @@ export default function App() {
             onRegenerateCartoonPortrait={handleRegenerateCartoonPortrait}
             onTogglePortraitStyle={handleTogglePortraitStyle}
             isPortraitGenerating={isPortraitGenerating}
+            onGenerateBackstory={handleGenerateBackstory}
+            isBackstoryGenerating={isBackstoryGenerating}
           />
         </div>
 
