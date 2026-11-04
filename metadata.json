@@ -1,0 +1,6 @@
+{
+  "name": "Mythic Forge - Fantasy Character Generator",
+  "description": "An interactive fantasy character generator that summons random adventurers with unique names, classes (Warrior, Mage, Rogue), stats, gear, and lore.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
